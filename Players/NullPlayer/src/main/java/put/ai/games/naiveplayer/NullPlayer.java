@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NullPlayer extends Player {
+    public static void main(String[] args) {}
+
     @Override
     public String getName() {
         return "Artur Mostowski 132289 Łukasz Grygier 132234";
