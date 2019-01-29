@@ -22,22 +22,6 @@ public class NullPlayer extends Player {
 
     @Override
     public Move nextMove(Board b) {
-//        List<Move> moves = b.getMovesFor(getColor());
-//        List<Integer> goodness = new ArrayList<>();
-//        for (Move move: moves) {
-//            b.doMove(move);
-//            goodness.add(b.getMovesFor(getOpponent(getColor())).size());
-//            b.undoMove(move);
-//        }
-//        int min=goodness.get(0);
-//        int iMin=0;
-//        for(int i=0;i<goodness.size();i++){
-//            if(goodness.get(i)<min){
-//                min=goodness.get(i);
-//                iMin=i;
-//            }
-//        }
-//        return moves.get(iMin);
         return findBestMove(b,0);
 //        if(b.getMovesFor(getOpponent(getColor())).size()==0)
 //        {
@@ -76,20 +60,15 @@ public class NullPlayer extends Player {
             best = -1000;
             moves = board.getMovesFor(color1);
         }
-            // Traverse all cells
             for (Move move: moves) {
-                // Make the move
                 board.doMove(move);
 
-                // Call minimax recursively and choose
-                // the maximum value
                 if(isMe) {
                     best = Math.min( best,minimax(board, depth+1, !isMe,maxDepth) );
                 }
                 else  {
                     best = Math.max( best,minimax(board, depth+1, !isMe,maxDepth) );
                 }
-                // Undo the move
                 board.undoMove(move);
             }
             return best;
@@ -100,23 +79,13 @@ public class NullPlayer extends Player {
         float bestVal = -1000;
         Move bestMove= moves.get(0);
 
-        // Traverse all cells, evaluate minimax function for
-        // all empty cells. And return the cell with optimal
-        // value.
         for (Move move : moves) {
-            // Make the move
             board.doMove(move);
 
-            // compute evaluation function for this
-            // move.
             float moveVal = minimax(board, 0, true,maxDepth);
 
-            // Undo the move
             board.undoMove(move);
 
-            // If the value of the current move is
-            // more than the best value, then update
-            // best/
             if (moveVal > bestVal) {
                 bestMove=move;
                 bestVal = moveVal;
