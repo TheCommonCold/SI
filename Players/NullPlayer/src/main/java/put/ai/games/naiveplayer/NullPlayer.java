@@ -22,21 +22,28 @@ public class NullPlayer extends Player {
 
     @Override
     public Move nextMove(Board b) {
-        return findBestMove(b,0);
-//        if(b.getMovesFor(getOpponent(getColor())).size()==0)
-//        {
-//            return findBestMove(b,0);
-//        }
-//        else{
-//            int complexity= (b.getMovesFor(getColor()).size()+b.getMovesFor(getOpponent(getColor())).size())/2;
-//            int maxdepth=0;
-//            while(getTime()>complexity*100){
-//                complexity=complexity*((b.getMovesFor(getColor()).size()+b.getMovesFor(getOpponent(getColor())).size())/2);
-//                maxdepth++;
-//                if (maxdepth>10)break;
-//            }
-//            return findBestMove(b,maxdepth);
-//        }
+        //return findBestMove(b,0);
+//        long startTime = System.nanoTime();
+//        int a=2;
+//        a=a*a;
+//        a=a*a;
+//        long endTime   = System.nanoTime();
+//        float totalTime = endTime - startTime;
+//        totalTime=totalTime/1000000;
+        if(b.getMovesFor(getOpponent(getColor())).size()==1 || b.getMovesFor(getColor()).size()==1)
+        {
+            return findBestMove(b,1);
+        }
+        else{
+            int complexity= b.getMovesFor(getColor()).size();
+            int maxdepth=0;
+            while(getTime()>complexity){
+                if(maxdepth % 2==0)complexity=complexity*b.getMovesFor(getOpponent(getColor())).size();
+                else complexity=complexity*b.getMovesFor(getColor()).size();
+                maxdepth++;
+            }
+            return findBestMove(b,maxdepth);
+        }
     }
 
     private float evaluate(Board b, Color color1, Color color2){
@@ -45,10 +52,12 @@ public class NullPlayer extends Player {
 
     private float minimax(Board board, int depth, boolean isMe, int maxDepth)
     {
+
         Color color1;
         Color color2;
         color1=getColor();
         color2=getOpponent(getColor());
+        if (getTime()<2)return evaluate(board,color1,color2);
         if(depth==maxDepth || board.getMovesFor(getColor()).size()==0 || board.getMovesFor(getOpponent(getColor())).size()==0) return evaluate(board,color1,color2);
         float best;
         List<Move> moves;
@@ -61,6 +70,7 @@ public class NullPlayer extends Player {
             moves = board.getMovesFor(color1);
         }
             for (Move move: moves) {
+                if (getTime()<2)return evaluate(board,color1,color2);
                 board.doMove(move);
 
                 if(isMe) {
@@ -80,6 +90,7 @@ public class NullPlayer extends Player {
         Move bestMove= moves.get(0);
 
         for (Move move : moves) {
+            if (getTime()<2)return bestMove;
             board.doMove(move);
 
             float moveVal = minimax(board, 0, true,maxDepth);
